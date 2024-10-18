@@ -1,13 +1,14 @@
-# Use the official MongoDB image from the Docker Hub
-FROM mongo:8.0.0-rc11-jammy
+FROM golang:1.22-alpine
 
+WORKDIR /app
 
-# Environment variables for MongoDB
-#ENV MONGO_INITDB_ROOT_USERNAME=admin
-#ENV MONGO_INITDB_ROOT_PASSWORD=secret
+COPY go.mod go.sum ./
+RUN go mod download
 
-# Expose the default MongoDB port
-EXPOSE 27017
+COPY . .
 
-# Command to run MongoDB
-CMD ["mongod"]
+RUN go build -o main .
+
+# EXPOSE 8080
+
+CMD ["./main"]
