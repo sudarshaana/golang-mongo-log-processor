@@ -1,0 +1,25 @@
+services:
+  mongodb:
+    build: .
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis:7.0
+    restart: 'no'
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  mongo-data:
+    driver: local
+
+  redis_data:
