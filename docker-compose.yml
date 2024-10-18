@@ -1,6 +1,16 @@
 services:
-  mongodb:
+
+  app:
     build: .
+    container_name: go-log-processor-container
+    depends_on:
+      - redis
+      - mongodb
+    ports:
+      - "8081:8081"
+
+  mongodb:
+    image: mongo:8.0.0-rc11-jammy
     container_name: mongodb
     ports:
       - "27017:27017"
@@ -21,5 +31,4 @@ services:
 volumes:
   mongo-data:
     driver: local
-
   redis_data:
