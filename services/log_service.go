@@ -21,7 +21,7 @@ func ProcessLog(ctx context.Context, workerID int, wg *sync.WaitGroup) {
 
 	// Initialize clients
 	redisClient := db.NewRedisClient()
-	mongoClient, mongoCollection := db.NewMongoClient()
+	mongoClient := db.NewMongoClient()
 
 	// Ping Redis to ensure connection
 	if err := redisClient.Ping(ctx).Err(); err != nil {
@@ -86,7 +86,7 @@ func ProcessLog(ctx context.Context, workerID int, wg *sync.WaitGroup) {
 				continue
 			}
 
-			success := storeLog(ctx, mongoCollection, logEntry, workerID)
+			success := storeLog(ctx, mongoClient, logEntry, workerID)
 			if success {
 				RemoveFromProcessingSet(ctx, redisClient, uniqueKey)
 
@@ -96,10 +96,11 @@ func ProcessLog(ctx context.Context, workerID int, wg *sync.WaitGroup) {
 			}
 		}
 	}
-
 }
-func storeLog(ctx context.Context, mongoCollection *mongo.Collection, logEntry models.RequestLog, workerID int) bool {
-	_, err := mongoCollection.InsertOne(ctx, logEntry)
+func storeLog(ctx context.Context, mongoClient *mongo.Client, logEntry models.RequestLog, workerID int) bool {
+	collection := mongoClient.Database(config.MongoDB).Collection(config.MongoCollection)
+
+	_, err := collection.InsertOne(ctx, logEntry)
 	if err != nil {
 		log.Printf("Error inserting log into MongoDB: %v", err)
 		return false

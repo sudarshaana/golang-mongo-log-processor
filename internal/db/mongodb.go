@@ -8,13 +8,13 @@ import (
 	"log"
 )
 
-func NewMongoClient() (*mongo.Client, *mongo.Collection) {
+func NewMongoClient() *mongo.Client {
 	clientOpts := options.Client().ApplyURI(config.MongoURI)
 	mongoClient, err := mongo.Connect(context.Background(), clientOpts)
 
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v -- %s", err, config.MongoURI)
 	}
-	collection := mongoClient.Database(config.MongoDB).Collection(config.MongoCollection)
-	return mongoClient, collection
+
+	return mongoClient
 }
