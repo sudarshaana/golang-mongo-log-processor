@@ -19,7 +19,6 @@ import (
 func ProcessLog(ctx context.Context, workerID int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
-	// Initialize clients
 	redisClient := db.NewRedisClient()
 	mongoClient := db.NewMongoClient()
 
@@ -99,6 +98,9 @@ func ProcessLog(ctx context.Context, workerID int, wg *sync.WaitGroup) {
 }
 func storeLog(ctx context.Context, mongoClient *mongo.Client, logEntry models.RequestLog, workerID int) bool {
 	collection := mongoClient.Database(config.MongoDB).Collection(config.MongoCollection)
+
+	// set the createdAt field to the current time
+	logEntry.CreatedAt = time.Now()
 
 	_, err := collection.InsertOne(ctx, logEntry)
 	if err != nil {
