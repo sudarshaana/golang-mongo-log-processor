@@ -52,6 +52,6 @@ func RecoverProcessingItems(ctx context.Context) {
 	if err != nil {
 		log.Printf("Error deleting from the '%s' queue: %v", config.RedisProcessingQueueName, err)
 	}
-	items, _ = redisClient.HGetAll(ctx, config.RedisProcessingQueueName).Result()
-	fmt.Printf("Remaining items in processing queue after del: %d\n", len(items))
+	//items, _ = redisClient.HGetAll(ctx, config.RedisProcessingQueueName).Result()
+	//fmt.Printf("Remaining items in processing queue after del: %d\n", len(items))
 }
