@@ -17,7 +17,7 @@ jobs:
       - name: 'Create env file'
         run: |
           echo "${{ secrets.GO_LOG_ENV }}" > .env
-          mv .env log-keeper
+#          mv .env log-keeper
             
 
       - name: Configure AWS credentials
