@@ -17,6 +17,9 @@ var (
 	RedisQueueName           string
 	RedisProcessingQueueName string
 	NumberOfWorkers          int
+	PrintHeartbeat           bool
+	LogPrintingDelay         int
+	StartHealthCheckServer   bool
 )
 
 func LoadConfig() error {
@@ -45,6 +48,27 @@ func LoadConfig() error {
 	}
 
 	NumberOfWorkers = workerInt
+
+	PrintHeartbeatStr := os.Getenv("PRINT_HEARTBEAT")
+	PrintHeartbeat, err = strconv.ParseBool(PrintHeartbeatStr)
+	if err != nil {
+		log.Printf("Error converting PRINT_HEARTBEAT to bool: %v\n", err)
+		return err
+	}
+
+	LogPrintingDelayStr := os.Getenv("LOG_PRINTING_DELAY")
+	LogPrintingDelay, err = strconv.Atoi(LogPrintingDelayStr)
+	if err != nil {
+		log.Printf("Error converting LOG_PRINTING_DELAY to int: %v\n", err)
+		return err
+	}
+
+	StartHealthCheckServerStr := os.Getenv("START_HEALTH_CHECK_SERVER")
+	StartHealthCheckServer, err = strconv.ParseBool(StartHealthCheckServerStr)
+	if err != nil {
+		log.Printf("Error converting START_HEALTH_CHECK_SERVER to bool: %v\n", err)
+		return err
+	}
 
 	return nil
 }
